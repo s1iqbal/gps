@@ -11,8 +11,8 @@ export const fetchPointA = (location: string = 'University of Toronto') => (
     .then((place) => {
       dispatch({ type: FETCH_POINT_A_SUCCESS, payload: place });
     })
-    .catch((error) => {
-      // Handle error cases if needed
+    .catch((error: Error) => {
+      console.log(error)
     });
 };
 
@@ -24,7 +24,7 @@ export const fetchPointB = (location: string = 'Ryerson University') => (
     .then((place) => {
       dispatch({ type: FETCH_POINT_B_SUCCESS, payload: place });
     })
-    .catch((error) => {
-      // Handle error cases if needed
+    .catch((error: Error) => {
+      console.log(error)
     });
 };

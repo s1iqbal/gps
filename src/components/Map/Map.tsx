@@ -1,10 +1,14 @@
+import 'leaflet/dist/leaflet.css';
+import '../../App.css'
+
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../reducers';
+import { fetchPointA, fetchPointB } from '../../actions/formActions';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Marker, Popup, MapContainer, TileLayer, useMapEvents, Circle, FeatureGroup, LayerGroup, LayersControl, Rectangle } from 'react-leaflet'
 import L from "leaflet";
 import Routing from "./Routing.tsx";
-import 'leaflet/dist/leaflet.css';
-import '../../App.css'
 import Form from '../UI/Form/Form.tsx'
 
 interface MapInterface {
@@ -24,20 +28,24 @@ function Map() {
       "normal": "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
     },
     pointA: L.latLng(43.784015, -79.299381),
-    pointB: L.latLng(43.637861, -79.535651)
-  })
+    pointB: L.latLng(42.784015, -79.299381)
+  }) 
+
+  const pointA = useSelector((state: RootState) => state.form.pointA);
+  const pointB = useSelector((state: RootState) => state.form.pointB);
+
 
   useEffect(()=>{
     setMap({ ...map, [`selectedMap`]: `normal`})
-    console.log('selected map skin: ' + map.selectedMap)
-  },[]) 
+    
+    console.log(pointA)
+  },[pointA, pointB]) 
 
   const center =  L.latLng(43.784015, -79.299381)
   const rectangle: number[][] = [
     [43.6, -80],
     [43.9, -79.5],
   ]
-
   return (
     <div className='Map'>
         <Form />
@@ -63,35 +71,19 @@ function Map() {
           />  */}
 
           <Routing pointA={map.pointA} pointB={map.pointB}  />
-          <LayersControl position="bottomleft">
-            <LayersControl.Overlay name="Map Change">
-                <FeatureGroup pathOptions={{ color: 'purple' }}>
-                  <Popup>Popup in FeatureGroup</Popup>
-                  <Circle center={[43.784015, -79.299381]} radius={100} />
-                  <Rectangle bounds={rectangle} />
-                </FeatureGroup>
-            </LayersControl.Overlay>
-          </LayersControl>
 
           <LayersControl position="topleft">
-            <LayersControl.Overlay name="Feature group">
-              <FeatureGroup pathOptions={{ color: 'purple' }}>
-                <Popup>Popup in FeatureGroup</Popup>
-                <Circle center={[43.784015, -79.299381]} radius={100} />
-                <Rectangle bounds={rectangle} />
-              </FeatureGroup>
-            </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Layer group with circles">
               <LayerGroup>
                 <Circle
-                  center={[43.784015, -79.299381]}
+                  center={[pointA.lat || 43.784015, pointA.lon || -79.299381]}
                   pathOptions={{ fillColor: 'blue' }}
-                  radius={100}
+                  radius={1000}
                 />
                 <Circle
-                  center={[43.637861, -79.535651]}
+                  center={[pointB.lat || 43.784015, pointB.lon || -79.299381]}
                   pathOptions={{ fillColor: 'red' }}
-                  radius={100}
+                  radius={1000}
                   stroke={true}
                   color='red'
                 />
@@ -108,7 +100,7 @@ function Map() {
             </LayersControl.Overlay>    
           </LayersControl>
           <LocationMarker />
-          <DraggableMarker /> 
+          {/* <DraggableMarker />  */}
         </MapContainer>
     </div>
   )
@@ -120,7 +112,7 @@ function LocationMarker() {
     click() {
       map.locate()
     },
-    locationfound(e) {
+    locationfound(e: { latlng: unknown; }) {
       setPosition(e.latlng)
       map.flyTo(e.latlng, map.getZoom())
     },
