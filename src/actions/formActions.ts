@@ -24,7 +24,6 @@ export const fetchPointB = (location: string = 'Ryerson University') => (
 ) => {
   geocodeAddress(location)
     .then((place) => {
-      setTimeout(() => {}, 1000);
       dispatch({ type: FETCH_POINT_B_SUCCESS, payload: place });
     })
     .catch((error) => {
