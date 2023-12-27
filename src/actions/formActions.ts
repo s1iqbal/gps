@@ -9,10 +9,12 @@ export const fetchPointA = (location: string = 'University of Toronto') => (
 ) => {
   geocodeAddress(location)
     .then((place) => {
+      setTimeout(() => {}, 1000);
       dispatch({ type: FETCH_POINT_A_SUCCESS, payload: place });
     })
-    .catch((error: Error) => {
+    .catch((error) => {
       console.log(error)
+      // Handle error cases if needed
     });
 };
 
@@ -22,9 +24,11 @@ export const fetchPointB = (location: string = 'Ryerson University') => (
 ) => {
   geocodeAddress(location)
     .then((place) => {
+      setTimeout(() => {}, 1000);
       dispatch({ type: FETCH_POINT_B_SUCCESS, payload: place });
     })
-    .catch((error: Error) => {
+    .catch((error) => {
       console.log(error)
+      // Handle error cases if needed
     });
 };

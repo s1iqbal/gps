@@ -12,7 +12,7 @@ const initialState: FormState = {
   pointB: {} as Place,
 };
 
-const formReducer = (state = initialState, action: { type: unknown; payload: unknown; }): FormState => {
+const formReducer = (state = initialState, action: { type: unknown; payload: Place; }): FormState => {
   switch (action.type) {
     case FETCH_POINT_A_SUCCESS:
       return {
